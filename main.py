@@ -19,7 +19,6 @@ class Node():
             
         self.available_roles = {k for k, v in tmp_reqs.items() if v > 0}
             
-            
     def is_valid(self, assignment):
         check = {k: v for k, v in self.requirement.items()}
         for name, role in assignment.items():
@@ -38,7 +37,6 @@ class Node():
         if role in preference.negatives:
             return -1
         return 0
-    
     
     def get_children(self, preferences):
         for name, preference in preferences.items():
@@ -62,6 +60,7 @@ class Node():
             
         return counts == self.requirement
     
+    
 class Preference():
     def __init__(self, positives=[], negatives=[]):
         if len(positives) + len(negatives) > MAXIMUM_N_PREFERENCES:
@@ -70,6 +69,7 @@ class Preference():
             ))    
         self.positives = positives
         self.negatives = negatives
+        
         
 def find_possible_complete_assignments(requirement, preferences):
     n = Node(requirement, assignment={})
@@ -83,9 +83,7 @@ def find_possible_complete_assignments(requirement, preferences):
     
     return complete_assignments
         
-
-
-
+    
 if __name__ == "__main__":
     requirement = {
         'nuker': 3,
