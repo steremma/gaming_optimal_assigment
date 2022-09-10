@@ -61,7 +61,16 @@ class Node():
             counts[role] += 1
             
         return counts == self.requirement
-
+    
+class Preference():
+    def __init__(self, positives=[], negatives=[]):
+        if len(positives) + len(negatives) > MAXIMUM_N_PREFERENCES:
+            raise ValueError('You cannot have more than {} preferences, you tried to pass {}'.format(
+                MAXIMUM_N_PREFERENCES, len(positives) + len(negatives)
+            ))    
+        self.positives = positives
+        self.negatives = negatives
+        
 def find_possible_complete_assignments(requirement, preferences):
     n = Node(requirement, assignment={})
     neighbours = [n]
@@ -75,25 +84,39 @@ def find_possible_complete_assignments(requirement, preferences):
     return complete_assignments
         
 
-requirement = {
-    'nuker': 3,
-    'bd': 1,
-    'sws': 1,
-    'bp': 1,
-    'ol': 1,
-    'ee': 1,
-    'se': 1
-}
-preferences = {
-    'mysticism': Preference(positives=['nuker', 'bd'], negatives=['sws']),
-    'ttl': Preference(positives=['nuker'], negatives=[]),
-    'vella': Preference(positives=['ee']),
-    'fortuna': Preference(positives=['sws']),
-    'noveria': Preference(positives=['sws'], negatives=['bp']),
-    'maria': Preference(positives=['nuker', 'bd']),
-    'melz': Preference(negatives=['ee']),
-    'emperior': Preference(positives=['ol']),
-    'jet': Preference(positives=['nuker'])
-}
 
-complete_assignments = find_possible_complete_assignments(requirement, preferences)        
+
+if __name__ == "__main__":
+    requirement = {
+        'nuker': 3,
+        'bd': 1,
+        'sws': 1,
+        'bp': 1,
+        'ol': 1,
+        'ee': 1,
+        'se': 1
+    }
+    preferences = {
+        'mysticism': Preference(positives=['nuker', 'bd'], negatives=['sws']),
+        'ttl': Preference(positives=['nuker'], negatives=[]),
+        'vella': Preference(positives=['ee']),
+        'fortuna': Preference(positives=['sws']),
+        'noveria': Preference(positives=['sws'], negatives=['bp']),
+        'maria': Preference(positives=['nuker', 'bd']),
+        'melz': Preference(negatives=['ee']),
+        'emperior': Preference(positives=['ol']),
+        'jet': Preference(positives=['nuker'])
+    }
+
+    complete_assignments = find_possible_complete_assignments(requirement, preferences)   
+    best_score = -9
+    best_configs = []
+    for ca in complete_assignments:
+        score = ca.score
+        if ca.score > best_score:
+            best_score = ca.score
+            best_configs = [ca.assignment]
+        elif ca.score == best_score:
+            best_configs.append(ca.assignment)
+     
+    print(best_configs[0])
